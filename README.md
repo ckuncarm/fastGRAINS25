@@ -26,7 +26,7 @@ The code was developed by **Carlos Kuncar Medina** as part of his MSc research a
 - Email: describano@udec.cl
 - ORCID: 0000-0003-2014-9008
 
-**Carlos Kuncar Medina, MSc. Candidate**
+**Carlos Kuncar Medina, MSc.**
 - Department of Civil Engineering, Universidad de Concepción, Chile
 - Email: camedina2017@udec.cl
 - *Lead developer of the fastGRAINS codebase*
