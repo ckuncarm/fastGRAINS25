@@ -17,5 +17,5 @@ MATERIAL_NAME = None
 def set_material_name(name):
     global MATERIAL_NAME, IMAGES_DIR, OUTPUT_DIR, IOU_THRESHOLD, DEVICE, IMAGE_SIZE, RESCALE, PAD
     MATERIAL_NAME = name
-    IMAGES_DIR = os.path.join("./data/input/", MATERIAL_NAME)
-    OUTPUT_DIR = os.path.join("./data/output/", MATERIAL_NAME)
+    IMAGES_DIR = os.path.join("./Results/", MATERIAL_NAME)
+    OUTPUT_DIR = os.path.join("./Results/", MATERIAL_NAME)
