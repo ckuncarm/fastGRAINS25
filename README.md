@@ -94,10 +94,11 @@ The tool benefits the geotechnical community by:
 - Offering reliable estimates with as few as 30 particles per sample
 
 ## 🔍 Example Results
-
+``
 <p align="center">
   <img src="Example_results.png" alt="Example Results" width="1200"/>
 </p>
+
 ## 🧰 Third-Party Tools and Acknowledgments
 
 ### Shape Analysis Implementation
