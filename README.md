@@ -100,7 +100,7 @@ The tool benefits the geotechnical community by:
 ## 🔍 Example Results
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/camedinak24/fastGRAINS25/main/images/example_results.png" alt="Example Results" width="700"/>
+  <img src="https://raw.githubusercontent.com/camedinak24/fastGRAINS25/main/Example_results.png" alt="Example Results" width="700"/>
 </p>
 
 ## 🧰 Third-Party Tools and Acknowledgments
