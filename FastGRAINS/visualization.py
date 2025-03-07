@@ -1,13 +1,12 @@
-
 import numpy as np
 import matplotlib.pyplot as plt
 import os
 from PIL import Image
-from IPython.display import clear_output
-from google.colab import files
+from IPython.display import clear_output, display
+import pandas as pd
+from shape_metrics import compute_shape_metrics
 
-
-def plot_grain(grain_data, convex, Roundness, Sa, Sd, Sp, Swl, AR, Cx, z, r, MCI, MCC):
+def plot_grain(grain_data, AR, Cx, Sp,  SAGI, de, dfmax, dfmin, dcir,  Roundness, R_image):
     """
     Plots a single grain with interactive parameters and annotations.
 
@@ -20,51 +19,22 @@ def plot_grain(grain_data, convex, Roundness, Sa, Sd, Sp, Swl, AR, Cx, z, r, MCI
     - MCI (tuple): Maximum Circle Inscribed (center_x, center_y, radius).
     - MCC (tuple): Minimum Circle Circumscribed (center_x, center_y, radius).
     """
-    import numpy as np
-    import matplotlib.pyplot as plt
-
     if 'grain_bin_rs_PCD' not in grain_data:
         print("Error: 'grain_bin_rs_PCD' key is missing in grain_data")
         return
 
-    grain = grain_data['grain_bin_rs_PCD']
+    grain = R_image
     grain_org = grain_data['grain_rs_PCD']
 
     # Create the plot
-    fig = plt.figure(figsize=(20, 10))
+    fig = plt.figure(figsize=(16, 8))
     fig.patch.set_facecolor('black')
     gs = fig.add_gridspec(1, 2, width_ratios=[1, 1])
 
     # First subplot with grain and annotations
     ax1 = fig.add_subplot(gs[0])
     ax1.imshow(grain, cmap='gray_r', aspect='equal')
-    ax1.set_facecolor('black')  # Set axis background color to black
-
-    theta = np.linspace(0, 2 * np.pi, 100)
-    for center, radius in zip(z, r):
-        ax1.plot(center[0], center[1], 'o', markersize=8, markerfacecolor='none',
-                 markeredgecolor='w', markeredgewidth=1, label='Circle Center')
-        ax1.plot(center[0], center[1], 'x', markersize=6, markerfacecolor='none',
-                 markeredgecolor='w', markeredgewidth=1)
-        ax1.plot(np.cos(theta) * radius + center[0], np.sin(theta) * radius + center[1],
-                 linewidth=1, color="lawngreen", linestyle="-", label='Circles Corners')
-
-    # Plot MCC and MCI
-    ax1.plot(np.cos(theta) * MCC[1] + MCC[0][0], np.sin(theta) * MCC[1] + MCC[0][1],
-             linewidth=2, color="blue", linestyle="-", label='MCC')
-    ax1.plot(np.cos(theta) * MCI[2] + MCI[0], np.sin(theta) * MCI[2] + MCI[1],
-             linewidth=2, color="red", linestyle="-", label='MCI')
-
-    # Plot convex points
-    ax1.plot(convex[:, 0], convex[:, 1], 'o', markersize=6, markerfacecolor='none',
-             markeredgecolor='r', markeredgewidth=0.5, label='Convex Points')
-
-    # Add text annotations
-    ax1.text(0.05, 0.95,
-             f'Roundness: {Roundness:.2f}\nSa: {Sa:.2f}\nSd: {Sd:.2f}\nSp: {Sp:.2f}\nSwl: {Swl:.2f}\nAR: {AR:.2f}\nCx: {Cx:.2f}',
-             transform=ax1.transAxes, fontsize=6, verticalalignment='top',
-             bbox=dict(boxstyle='round,pad=0.3', edgecolor='black', facecolor='white'),
-             fontdict={'style': 'italic'})
+    ax1.set_facecolor('white')  # Set axis background color to black
 
     # Add legend
     handles, labels = ax1.get_legend_handles_labels()
@@ -77,10 +47,7 @@ def plot_grain(grain_data, convex, Roundness, Sa, Sd, Sp, Swl, AR, Cx, z, r, MCI
     ax2 = fig.add_subplot(gs[1])
     ax2.set_facecolor('black')
     ax2.imshow(grain_org, cmap='gray', aspect='equal')
-    ax2.plot(np.cos(theta) * MCC[1] + MCC[0][0], np.sin(theta) * MCC[1] + MCC[0][1],
-             linewidth=2, color="red", linestyle="-", label='Reference Circle')
     ax2.axis("off")
-
     plt.show()
     plt.close()
 
@@ -96,19 +63,18 @@ def interactive_plot(id, span, tol, factor, grains, out):
     - grains (dict): Dictionary containing all grains data.
     - out (IPython.display.Output): Output widget for displaying the plot.
     """
-    from IPython.display import clear_output
-    from shape_metrics import compute_shape_metrics
+    # from shape_metrics import compute_shape_metrics
 
     grain_data = grains[id]
     try:
-        metrics = compute_shape_metrics(grain_data["grain_bin_rs_PCD"], span, tol, factor, min_points=4)
-        convex, Roundness, Sa, Sc, Sd, Sp, Swl, AR, Cx, z, r, MCI, MCC, _, _, _, _, _, _, _ = metrics
+        metrics = compute_shape_metrics(key, grains, span, use_vangla_smoothing, tol, factor, min_points, return_dict)
+        AR, Cx, Sp,  SAGI, de, dfmax, dfmin, dcir,  Roundness,  R_image = metrics
     except KeyError as e:
         print(f"KeyError: {e} is missing in grain_data")
         return
     with out:
         clear_output(wait=False)
-        plot_grain(grain_data, convex, Roundness, Sa, Sd, Sp, Swl, AR, Cx, z, r, MCI, MCC)
+        plot_grain(grain_data, AR, Cx, Sp,  SAGI, de, dfmax, dfmin, dcir,  Roundness,  R_image)
         plt.show()
         plt.close("all")
 
@@ -121,11 +87,6 @@ def plot_grains_with_circles(grains, path, num_columns=4):
     - path (str): Path to save the results.
     - num_columns (int): Number of columns in the subplot grid.
     """
-    import numpy as np
-    import matplotlib.pyplot as plt
-    import os
-    from google.colab import files
-
     sorted_keys = sorted(grains.keys())
     num_grains = len(sorted_keys)
     num_rows = (num_grains + num_columns - 1) // num_columns
@@ -191,11 +152,16 @@ def plot_grains_with_circles(grains, path, num_columns=4):
     print(f"Figure saved at {save_path}")
     plt.close(fig)
 
-    # Download the PDF file in Colab
-    files.download(save_path)
-
     # Save the data to an Excel file
     save_grains_to_excel(grains, 'grains_data.xlsx')
+
+    # Download the files if in Colab
+    try:
+        from google.colab import files
+        files.download(save_path)
+        files.download('grains_data.xlsx')
+    except ImportError:
+        pass
 
 def save_grains_to_excel(grains, filename):
     """
@@ -205,9 +171,6 @@ def save_grains_to_excel(grains, filename):
     - grains (dict): Dictionary containing all grains data.
     - filename (str): Name of the Excel file to save.
     """
-    import pandas as pd
-    from google.colab import files
-
     # Create a list to store data
     data = []
 
@@ -238,9 +201,6 @@ def save_grains_to_excel(grains, filename):
 
     # Save the DataFrame to an Excel file
     df.to_excel(filename, index=False)
-
-    # Download the file in Colab
-    files.download(filename)
 
 def draw_circles_on_grain(grain_data):
     """
