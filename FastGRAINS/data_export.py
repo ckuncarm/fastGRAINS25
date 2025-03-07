@@ -9,9 +9,10 @@ from google.colab import files
 from IPython.display import display, HTML
 from visualization import draw_circles_on_grain
 import tempfile
+from constants import OUTPUT_DIR
 
 # Ensure the directory exists
-DATA_DIR = './data'
+DATA_DIR = './Results'
 if not os.path.exists(DATA_DIR):
     os.makedirs(DATA_DIR)
 
@@ -296,7 +297,226 @@ def plot_density_curves(df):
     plt.show()
     plt.close()
 
+def plot_density_curves(df):
+    """
+    Plots density curves for the given DataFrame and saves the image in DATA_DIR.
+    """
+    variables = ['Roundness', 'AR', 'Cx', 'Sp']
+    labels = ['$R$', '$AR$', '$C_{x}$', '$S_{p}$']
+    letters = ['(a)', '(b)', '(c)', '(d)']
+
+    # Use a Seaborn color palette
+    colors = sns.color_palette("husl", len(variables))
+
+    # Configure font and axes properties
+    plt.rcParams.update({
+        'font.size': 9.5,
+        'axes.labelsize': 8.5,
+        'xtick.labelsize': 8.5,
+        'ytick.labelsize': 8.5,
+        'legend.fontsize': 5.5,
+        'font.family': 'DejaVu Sans',  # Use a font that is available in Matplotlib
+        'axes.edgecolor': 'black',     # Set axes edge color to black
+        'xtick.color': 'black',        # Set x-tick color to black
+        'ytick.color': 'black'         # Set y-tick color to black
+    })
+
+    # Create subplots
+    fig, axes = plt.subplots(2, 2, figsize=(5,4), dpi=220)
+    axes = axes.flatten()
+
+    # Plot density curves with shaded areas
+    for i, (variable, label, color) in enumerate(zip(variables, labels, colors)):
+        sns.kdeplot(df[variable], fill=True, color=color, ax=axes[i], label=variable, alpha=0.3, linestyle='-')
+
+        axes[i].set_xlabel(label)
+        axes[i].set_ylabel('Density')
+        axes[i].set_xlim(0, 1)  # Set x-axis range between 0 and 1
+        axes[i].grid(False)  # Turn off the grid
+
+        # Calculate mean and standard deviation
+        mean = df[variable].mean()
+        std = df[variable].std()
+
+        # Create text with mean and standard deviation
+        textstr = f'{variable} = {mean:.2f}, \n σ = {std:.2f}'
+
+        # Add text in a fancy box
+        props = dict(boxstyle='round,pad=0.3', edgecolor='black', facecolor='white', alpha=0.95)
+        axes[i].text(0.05, 0.95, textstr, transform=axes[i].transAxes, fontsize=8,
+                    verticalalignment='top', bbox=props)
+
+        # Position the letter outside the plot to the left
+        axes[i].text(-0.2, 1.05, f'{letters[i]}', transform=axes[i].transAxes, fontsize=10, fontweight='bold', va='top', ha='right')
+
+    # Adjust layout
+    plt.tight_layout()
+
+    # Save the plot
+    density_curves_path = os.path.join(OUTPUT_DIR, 'density_curves.png')
+    plt.savefig(density_curves_path, dpi=300)
+    plt.show()
+    plt.close()
+def save_data_as_zip(material_name):
+    """
+    Saves the contents of DATA_DIR into a zip file.
+    """
+    zip_filename = material_name + '.zip'
+    with zipfile.ZipFile(zip_filename, 'w') as zipf:
+        for root, dirs, files_in in os.walk(OUTPUT_DIR):
+            for file in files_in:
+                file_path = os.path.join(root, file)
+                zipf.write(file_path, arcname=os.path.relpath(file_path, OUTPUT_DIR))
+    print(f"Data saved to {zip_filename}")
 # # Only execute the following code when the script is run directly
 # if __name__ == "__main__":
 #     # Example usage
 #     new_grains_df = shape_calculation(grains, output_excel_filename='grains_data.xlsx')
+
+import os
+import io
+import pandas as pd
+import openpyxl
+from openpyxl.drawing.image import Image as OpenpyxlImage
+from openpyxl.styles import Alignment, Font, PatternFill, numbers
+from PIL import Image
+
+def export_to_excel(material_name, grains):
+  # Convert the grains dictionary to a DataFrame
+  grains_df = pd.DataFrame.from_dict(grains, orient='index')
+
+  # Select columns to include
+  columns_to_include = [
+      'grain_id', 'grain_rs', 'R_image', 'de', 'dcir',
+      'minf', 'maxf', 'Roundness', 'AR', 'Cx', 'Sp',"SAGI"
+  ]
+
+  new_grains_df = grains_df.loc[:, columns_to_include]
+
+  # Plot the granulometric curve
+  # plot_granulometric_curve(grains_df)
+
+  # Plot density curves
+  plot_density_curves(new_grains_df)
+
+  # grains_df = pd.DataFrame.from_dict(grains, orient='index')
+
+  filename = os.path.join(OUTPUT_DIR, material_name + ".xlsx")
+
+  # Output Excel file
+
+  # Save the DataFrame to Excel
+  new_grains_df.to_excel(filename, index=False)
+
+  # Load the workbook and worksheet
+  wb = openpyxl.load_workbook(filename)
+  ws = wb.active
+
+  # Add a second header row for units
+  units_row = [
+      '',  # grain_id (no units)
+      '',  # grain_rs (no units)
+      '',  # R_image (no units)
+      'px',  # de (no units)
+      'px',  # dcir (pixels)
+      'px',  # minf (pixels)
+      'px',  # maxf (pixels)
+      '-',  # Roundness (dimensionless)
+      '-',  # AR (dimensionless)
+      '-',  # Cx (dimensionless)
+      '-',  # Sp (dimensionless)
+      '-'   # SAGI (dimensionless)
+  ]
+
+  # Insert the units row below the main header
+  ws.insert_rows(2)  # Insert a new row at position 2
+  for col_num, unit in enumerate(units_row, 1):
+      ws.cell(row=2, column=col_num, value=unit)
+
+  # Function to insert images from a specific column
+  def insert_images_from_column(column_name, new_width=120):
+      # Find the column index for the header
+      img_col_index = None
+      for cell in ws[1]:  # Iterate over the header row
+          if cell.value == column_name:
+              img_col_index = cell.column  # Get the column index (1-based)
+              break
+
+      if img_col_index is None:
+          print(f"Column '{column_name}' not found.")
+      else:
+          # Iterate over the cells in the column (starting from row 3, since row 2 is the units row)
+          for row in ws.iter_rows(min_row=3, min_col=img_col_index, max_col=img_col_index):
+              cell = row[0]
+              # Get the corresponding PIL Image from the DataFrame
+              img_pil = new_grains_df.loc[cell.row - 3, column_name]  # DataFrame is 0-based, Excel is 1-based
+
+              # Convert PIL Image to bytes
+              img_bytes = io.BytesIO()
+              img_pil.save(img_bytes, format='PNG')
+              img_bytes.seek(0)
+
+              # Create an openpyxl Image object
+              img_obj = OpenpyxlImage(img_bytes)
+
+              # Optionally, adjust image size
+              original_width, original_height = img_obj.width, img_obj.height
+              scale = new_width / original_width
+              new_height = int(original_height * scale)
+              img_obj.width = new_width
+              img_obj.height = new_height
+
+              # Adjust the row height: Excel row height is measured in points
+              # Roughly, 1 point ≈ 1.33 pixels, so set height = new_height / 1.33
+              ws.row_dimensions[cell.row].height = new_height / 1.33
+
+              # Adjust the column width to fit the image
+              ws.column_dimensions[openpyxl.utils.get_column_letter(img_col_index)].width = new_width / 7  # Approximate conversion
+
+              # Clear the cell text so only the image is visible
+              cell.value = None
+
+              # Anchor the image to the cell
+              img_obj.anchor = cell.coordinate
+              ws.add_image(img_obj)
+
+  # Insert images from 'R_image' column
+  insert_images_from_column('R_image', new_width=120)
+
+  # Insert images from 'grain_rs' column
+  insert_images_from_column('grain_rs', new_width=120)
+
+  # Apply formatting to all cells
+  center_alignment = Alignment(horizontal='center', vertical='center')
+  decimal_format = numbers.FORMAT_NUMBER_00  # Format for two decimal places
+
+  # Style for the header
+  header_font = Font(bold=True, color="FFFFFF")  # White text
+  header_fill = PatternFill(start_color="000000", end_color="000000", fill_type="solid")  # Black background
+
+  # Style for the units row
+  units_font = Font(italic=True, color="FFFFFF")  # Black italic text
+  units_fill = PatternFill(start_color="000000", end_color="000000", fill_type="solid")  # Light gray background
+
+  # Apply formatting to all cells
+  for row in ws.iter_rows():
+      for cell in row:
+          cell.alignment = center_alignment  # Center align all cells
+          if isinstance(cell.value, (int, float)):  # Format numeric cells to two decimal places
+              cell.number_format = decimal_format
+
+  # Apply header styling
+  for cell in ws[1]:  # Iterate over the main header row
+      cell.font = header_font
+      cell.fill = header_fill
+
+  # Apply units row styling
+  for cell in ws[2]:  # Iterate over the units row
+      cell.font = units_font
+      cell.fill = units_fill
+
+  # Save the modified workbook
+  wb.save(filename)
+
+  print(f"Excel file '{filename}' has been created with images anchored to cells, formatting, and units applied.")
+
