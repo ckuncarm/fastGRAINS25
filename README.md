@@ -2,10 +2,6 @@
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/camedinak24/fastGRAINS25/blob/main/FastGRAINS.ipynb)
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/camedinak24/fastGRAINS25/main/images/logo.png" alt="fastGRAINS Logo" width="300"/>
-</p>
-
 ## 📋 Overview
 
 This repository contains the implementation of the manuscript titled **"Using a Smartphone Device to Quantify Particle Size and Shape Descriptors"** (November 2024). fastGRAINS provides an open-source, automatic procedure to obtain particle size and shape descriptors through 2D image processing using a smartphone device.
@@ -100,12 +96,8 @@ The tool benefits the geotechnical community by:
 ## 🔍 Example Results
 
 <p align="center">
-  <img src="Example_results.png" alt="Example Results" width="700"/>
+  <img src="Example_results.png" alt="Example Results" width="1200"/>
 </p>
-<p align="center">
-  <img src="examples/Example_Paper.jpg" alt="Example from Paper" width="700"/>
-</p>
-
 ## 🧰 Third-Party Tools and Acknowledgments
 
 ### Shape Analysis Implementation
