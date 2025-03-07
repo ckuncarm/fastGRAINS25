@@ -11,15 +11,6 @@ import numpy as np
 from constants import DEVICE
 
 def parse_args(args_list):
-    """
-    Parses command-line-like arguments for model configuration.
-
-    Parameters:
-    - args_list (list): List of argument strings.
-
-    Returns:
-    - args (Namespace): Parsed arguments.
-    """
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_path", type=str, default="./FastSAM.pt", help="Model path")
     parser.add_argument("--img_path", type=str, default="./images/dogs.jpg", help="Path to image file")
@@ -33,54 +24,20 @@ def parse_args(args_list):
     return parser.parse_args(args_list)
 
 def load_model(model_path, device):
-    """
-    Loads the FastSAM segmentation model onto the specified device.
-
-    Parameters:
-    - model_path (str): Path to the model.
-    - device (torch.device): Device to load the model on.
-
-    Returns:
-    - model (FastSAM): Loaded model.
-    """
     model = FastSAM(model_path)
     model.to(device)
     return model
 
 def main(args):
-    """
-    Main function to execute the segmentation model.
-
-    Parameters:
-    - args (Namespace): Parsed arguments.
-
-    Returns:
-    - ann (list): Annotations from the model.
-    - output_path (str): Path to the output image.
-    """
     model = load_model(args.model_path, args.device)
     input_image = Image.open(args.img_path).convert("RGB")
     everything_results = model(input_image, device=args.device, retina_masks=True, imgsz=args.imgsz, conf=args.conf, iou=args.iou)
     prompt_process = FastSAMPrompt(input_image, everything_results, device=args.device)
     ann = prompt_process.everything_prompt()
-    output_path = os.path.join(args.output, os.path.basename(args.img_path))
-    prompt_process.plot(annotations=ann, output_path=output_path, better_quality=args.better_quality, withContours=args.withContours)
-    return ann, output_path
+    # Eliminamos la generación de la imagen
+    return ann  # Ahora solo retornamos las anotaciones
 
 def run_inference(image_path, imgsz, iou, use_gpu=True):
-    """
-    Sets up arguments and runs the main function to perform inference.
-
-    Parameters:
-    - image_path (str): Path to the input image.
-    - imgsz (int): Image size for processing.
-    - iou (float): IoU threshold.
-    - use_gpu (bool): Whether to use GPU.
-
-    Returns:
-    - annotations (list): Annotations from the model.
-    - output_path (str): Path to the output image.
-    """
     device = 'cuda' if use_gpu and torch.cuda.is_available() else 'cpu'
     args_list = [
         '--model_path', './FastSAM.pt',
@@ -93,25 +50,15 @@ def run_inference(image_path, imgsz, iou, use_gpu=True):
         '--device', device
     ]
     args = parse_args(args_list)
-    annotations, output_path = main(args)
-    return annotations, output_path
+    annotations = main(args)  # Ahora solo recibimos las anotaciones
+    return annotations  # Retornamos solo las anotaciones
+
 def load_annotations(annotations, min_major_axis_length):
-    """
-    Processes segmentation annotations by filtering small objects and sorting.
-
-    Parameters:
-    - annotations (list): List of annotation masks.
-    - min_major_axis_length (int): Minimum size to keep an annotation.
-
-    Returns:
-    - sorted_filtered_annotations (list): Processed annotations.
-    """
     from skimage.segmentation import clear_border
     from skimage.measure import regionprops, label
     import numpy as np
     import torch
 
-    # Convert annotations to numpy arrays if they are PyTorch tensors
     if isinstance(annotations, torch.Tensor):
         annotations = annotations.cpu().numpy()
 
