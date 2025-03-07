@@ -1,97 +1,91 @@
-# Grain Shape Analysis Notebook
+# fastGRAINS: Grain Shape Analysis Tool
 
-**Implementation of the Manuscript:**
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/camedinak24/fastGRAINS25/blob/main/FastGRAINS.ipynb)
 
-This notebook corresponds to the implementation of the manuscript titled **"Using a Smartphone Device to Quantify Particle Size and Shape Descriptors"** by **Daniella Escribano**, **Carlos Kuncar Medina**, and **Gonzalo Montalva Alvarado** (November 2024). As authors, we plan to post the code on GitHub after the review process.
+## Overview
 
----
+This repository contains the implementation of the manuscript titled **"Using a Smartphone Device to Quantify Particle Size and Shape Descriptors"** (November 2024). fastGRAINS provides an open-source, automatic procedure to obtain particle size and shape descriptors through 2D image processing using a smartphone device.
 
-## Author Information
+## Key Features
+
+- Automatic grain shape analysis using smartphone images
+- Requires only a simple initial calibration of the camera lens
+- Generates spreadsheets with detailed particle size and shape descriptors
+- Supports geotechnical applications through morphological characterization
+- Validated with known critical state parameter samples
+
+## Implementation
+
+The code was developed by **Carlos Kuncar Medina** as part of his MSc research at Universidad de Concepción, Chile. The research was conducted under the supervision of Dr. Daniella Escribano and Dr. Gonzalo Montalva Alvarado.
+
+## Authors
 
 **Daniella Escribano, PhD**
-
 - Department of Civil Engineering, Universidad de Concepción, Chile
 - Fondecyt Iniciación Nº11241067, ANID, Chile
 - Email: describano@udec.cl
 - ORCID: 0000-0003-2014-9008
 
 **Carlos Kuncar Medina, MSc. Candidate**
-
 - Department of Civil Engineering, Universidad de Concepción, Chile
 - Email: camedina2017@udec.cl
+- *Lead developer of the fastGRAINS codebase*
 
 **Gonzalo Montalva Alvarado, PhD**
-
 - Department of Civil Engineering, Universidad de Concepción, Chile
 - EASER Project ACT240044, ANID, Chile
 - Email: gmontalva@udec.cl
 - ORCID: 0000-0001-8598-7120
 
----
+## Usage
 
-## Abstract Summary
+The repository includes a Jupyter notebook that can be run locally or in Google Colab. The notebook guides users through the process of:
 
-This notebook provides a procedure to obtain particle size and shape descriptors through a 2D image processing algorithm using a smartphone device. The open-source tool is automatic and requires only a simple initial calibration of the camera lens. The output consists of a spreadsheet with particle size and shape descriptors for each grain, as well as their average values for the entire sample. The tool benefits the geotechnical community due to the strong link between particle morphology and mechanical properties. An application is included where the script is used to obtain particle shape descriptors of a sand with known critical state parameters, evaluating them through particle shape predictive models. The results indicate that analyzing images with a minimum of 30 particles provides a good match with experimental data, highlighting the advantages of the tool as a first estimate and as a complement to a full experimental program.
+1. Loading and preprocessing grain images
+2. Calibrating the analysis based on camera parameters
+3. Extracting size and shape descriptors for each grain
+4. Generating comprehensive result reports
 
----
-## 11. Explanation of Excel Results
+## Output Description
 
-The Excel file generated from the grain shape analysis contains several columns with detailed information for each grain. Below is an explanation of each column:
+The analysis produces an Excel file with the following parameters for each grain:
 
-### **Identification and Images**
+### Identification and Images
+- Unique grain identifiers
+- Visual representations of analysis results
 
-- **`grain_id`**: Unique identifier assigned to each grain analyzed.
-- **`grain_results`**: Image of the grain with circles overlaid, showing the results of the shape analysis (e.g., inscribed circle, circumscribed circle).
-- **`grain_rs_PCD`**: Resized binary image of the grain adjusted to the Particle Characteristic Dimension (PCD), used for consistent scale in analysis.
+### Size Measurements (in pixel units)
+- Diameter of largest inscribed circle
+- Diameter of smallest circumscribed circle
+- Minimum and maximum Feret diameters
+- Major and minor axis lengths
 
-### **Size Measurements** *(in pixel units)*
+### Shape Descriptors
+- Equivalent diameter
+- Roundness (Zheng & Hryciw, 2015)
+- Aspect Ratio
+- Convexity
+- Various sphericity measures (Area, Circular ratio, Diameter, Perimeter, Width-to-Length ratio)
 
-The following columns represent size measurements and are **in pixel units**:
+## Applications
 
-- **`dins`**: Diameter of the largest inscribed circle within the grain.
-- **`dcir`**: Diameter of the smallest circumscribed circle that encloses the grain.
-- **`minf`**: Minimum Feret diameter (smallest distance between two parallel tangents on opposite sides of the grain).
-- **`maxf`**: Maximum Feret diameter (largest distance between two parallel tangents on opposite sides of the grain).
-- **`d1`**: Length of the major axis of the grain (maximum dimension).
-- **`d2`**: Length of the minor axis of the grain (minimum dimension).
+The tool benefits the geotechnical community by:
+- Providing rapid assessment of grain morphology
+- Establishing connections between particle shape and mechanical properties
+- Complementing traditional experimental programs
+- Offering reliable estimates with as few as 30 particles per sample
 
-### **Shape Descriptors**
+## Citation
 
-- **`de`**: Equivalent diameter.
-- **`Roundness`**: Measure of the grain's roundness based on the curvature of its edges, following the method by Zheng and Hryciw (2015).
-- **`AR`**: Aspect Ratio, calculated as the ratio of the major axis length to the minor axis length (\( AR = \frac{d1}{d2} \)).
-- **`Cx`**: Convexity.
-- **`Sa`**: Area Sphericity.
-- **`Sc`**: Circular ratio sphericity.
-- **`Sd`**: Diameter-Sphericity.
-- **`Sp`**: Perimeter Sphericity based.
-- **`Swl`**: Width to Length ratio Shpericity.
+If you use this tool in your research, please cite:
+```
+Escribano, D., Kuncar Medina, C., & Montalva Alvarado, G. (2024). Using a Smartphone Device to Quantify Particle Size and Shape Descriptors. [Journal information pending]
+```
 
-### **Notes on Units**
+## License
 
-- The size measurements (**`dins`**, **`dcir`**, **`minf`**, **`maxf`**, **`d1`**, **`d2`**) are in **pixel units**. These values are derived from the images and represent relative sizes based on the image resolution.
-- The shape descriptors are **dimensionless** quantities that describe the grain's shape characteristics independent of size.
+[Include license information here]
 
-### **Understanding the Measurements**
+## Acknowledgments
 
-- **Size Measurements**: Useful for understanding the physical dimensions and size distribution of the grains within the sample. While provided in pixel units, these can be converted to real-world units (e.g., millimeters) if the scale of the images is known.
-- **Shape Descriptors**: Provide insights into the morphological characteristics of the grains, which can influence the material's mechanical properties, such as strength and permeability.
-
-### **Reference**
-
-The methods and calculations for the roundness and sphericity parameters are based on:
-
-- **Zheng, J., & Hryciw, R. D. (2015).** Traditional soil particle sphericity, roundness, and surface roughness by computational geometry. *Géotechnique*, 65(6), 494-506.
-
----
-
-**Tip**: To convert pixel units to actual measurements, you need to know the scale of your images (e.g., pixels per millimeter). Once the scale is determined through calibration, you can multiply the pixel measurements by the scale factor to obtain real-world dimensions.
-
----
-
-**Understanding these parameters will help in assessing the grain morphology and predicting the behavior of granular materials in geotechnical applications.**
-
-
-<a target="_blank" href="https://colab.research.google.com/github/camedinak24/fastGRAINS25/blob/main/FastGRAINS.ipynb">
-  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
-</a>
+This research was supported by Fondecyt Iniciación Nº11241067 and EASER Project ACT240044, ANID, Chile.
