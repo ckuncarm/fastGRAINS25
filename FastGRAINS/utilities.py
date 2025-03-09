@@ -47,7 +47,7 @@ import gc
 from constants import IMAGES_DIR, OUTPUT_DIR
 
 # Global variables to store grain data for processing
-# filtered_grains = {}
+filtered_grains = {}
 # OUTPUT_DIR = os.path.join('/content', 'output_images')
 def create_rgb_and_binary_grids(grains, output_rgb_path, output_binary_path, background_color='black'):
     """
