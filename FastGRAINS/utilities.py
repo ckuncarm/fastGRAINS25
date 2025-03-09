@@ -49,7 +49,6 @@ from constants import IMAGES_DIR, OUTPUT_DIR
 # Global variables to store grain data for processing
 filtered_grains = {}
 # OUTPUT_DIR = os.path.join('/content', 'output_images')
-
 def create_rgb_and_binary_grids(grains, output_rgb_path, output_binary_path, background_color='black'):
     """
     Creates an interactive UI for selecting grains and generating image grids.
@@ -63,9 +62,11 @@ def create_rgb_and_binary_grids(grains, output_rgb_path, output_binary_path, bac
     Returns:
         None (displays interactive widgets and saves images when selection is complete)
     """
+    global filtered_grains  # Access the global variable
     if not grains:
         print("❌ No grains available for processing! Please run the segmentation first.")
         return
+    filtered_grains = grains.copy()  # Initialize with a copy of the input grains
     
     # Build list of images with IDs and sizes
     image_list = [
@@ -299,7 +300,7 @@ def create_rgb_and_binary_grids(grains, output_rgb_path, output_binary_path, bac
     display(generation_output)
     
     def on_generate_click(b):
-        global filtered_grains  # Store the filtered dictionary globally
+        global filtered_grains  # Access the global variable
         
         with generation_output:
             clear_output(wait=True)
