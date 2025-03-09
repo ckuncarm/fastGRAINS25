@@ -47,7 +47,7 @@ import gc
 from constants import IMAGES_DIR, OUTPUT_DIR
 
 # Global variables to store grain data for processing
-filtered_grains = {}
+# filtered_grains = {}
 # OUTPUT_DIR = os.path.join('/content', 'output_images')
 def create_rgb_and_binary_grids(grains, output_rgb_path, output_binary_path, background_color='black'):
     """
@@ -424,14 +424,17 @@ def create_rgb_and_binary_grids(grains, output_rgb_path, output_binary_path, bac
 
 # Example usage (assuming grains dictionary is populated)
 def run_grain_selection(grains_dict=None):
-    """Run the grain selection workflow with the provided grains dictionary"""
+    """Run the grain selection workflow and return filtered_grains"""
     if grains_dict is None:
         print("⚠️ No grains available. Please run segmentation first.")
-        return
+        return None  # Explicitly return None for clarity
     
     # Define output paths
     rgb_path = os.path.join(OUTPUT_DIR, 'grid_rgb.png')
     bin_path = os.path.join(OUTPUT_DIR, 'grid_bin.png')
     
-    # Run the selection UI
+    # Run the selection UI (this updates the global filtered_grains)
     create_rgb_and_binary_grids(grains_dict, rgb_path, bin_path, background_color='black')
+    
+    # Return the global filtered_grains variable
+    return filtered_grains  # Now returns the global state
