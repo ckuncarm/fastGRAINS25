@@ -41,7 +41,7 @@ The code was developed by **Carlos Kuncar Medina** as part of his MSc research a
 
 ### Running the Notebook
 
-1. **Option 1: Run in Google Colab (Recommended)**
+1. **Option 1: Run in Google Colab**
    - Click the "Open in Colab" button at the top of this README
    - The notebook will open in Google Colab with all necessary dependencies
    - Follow the step-by-step instructions in the notebook
