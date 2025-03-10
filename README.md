@@ -46,11 +46,6 @@ The code was developed by **Carlos Kuncar Medina** as part of his MSc research a
    - The notebook will open in Google Colab with all necessary dependencies
    - Follow the step-by-step instructions in the notebook
 
-2. **Option 2: Run Locally**
-   - Clone this repository: `git clone https://github.com/camedinak24/fastGRAINS25.git`
-   - Install the required dependencies: `pip install -r requirements.txt`
-   - Open the notebook in Jupyter: `jupyter notebook FastGRAINS.ipynb`
-
 ### Required Dependencies
 
 The notebook requires the following main packages:
