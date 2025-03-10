@@ -91,7 +91,6 @@ The tool benefits the geotechnical community by:
 - Providing rapid assessment of grain morphology
 - Establishing connections between particle shape and mechanical properties
 - Complementing traditional experimental programs
-- Offering reliable estimates with as few as 30 particles per sample
 
 ## 🔍 Example Results
 ``
@@ -125,8 +124,8 @@ Escribano, D., Kuncar Medina, C., & Montalva Alvarado, G. (2024). Using a Smartp
 
 ## 📜 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+()
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 This research was supported by Fondecyt Iniciación Nº11241067 and EASER Project ACT240044, ANID, Chile.
