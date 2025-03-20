@@ -13,7 +13,7 @@ feret
 loess 
 xlsxwriter
 
-pandas>=1.1.4
+pandas>=2.2.0
 seaborn>=0.11.0
 
 gradio==3.35.2
