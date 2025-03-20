@@ -13,12 +13,9 @@ feret
 loess 
 xlsxwriter
 
-numpy==1.26.3
-
 pandas>=1.24.0
 seaborn>=0.11.0
 
-gradio==3.35.2
 
 # Ultralytics-----------------------------------
 # ultralytics == 8.0.120
