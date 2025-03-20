@@ -1,4 +1,6 @@
 # Base-----------------------------------
+
+numpy==1.26.4
 matplotlib>=3.8.0
 opencv-python>=4.6.0
 Pillow>=7.1.2
@@ -7,13 +9,13 @@ requests>=2.23.0
 scipy>=1.4.1
 tqdm>=4.64.0
 
-torch==2.5.1
-torchvision==0.13.1
+torch==2.4.1
+torchvision==0.19.1
 
-numpy==1.26.4
 feret
 loess 
 xlsxwriter
+
 
 pandas>=1.24.0
 seaborn>=0.11.0
