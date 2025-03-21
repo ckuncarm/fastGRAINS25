@@ -1,4 +1,3 @@
-numpy<=1.26.4
 matplotlib>=3.8.0
 opencv-python>=4.6.0
 Pillow>=7.1.2
@@ -12,8 +11,5 @@ loess
 xlsxwriter
 pandas>=1.24.0
 seaborn>=0.11.0
-
-
 torch<=2.5.1
-
 torchvision>=0.8.1
