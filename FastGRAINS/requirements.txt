@@ -1,5 +1,5 @@
 
-torch<=2.5.1
+torch>=1.7.0
 torchvision>=0.8.1
 
 numpy<=1.26.4
