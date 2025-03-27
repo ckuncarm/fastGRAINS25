@@ -1,6 +1,19 @@
 # fastGRAINS: Grain Shape Analysis Tool
 
+fastGRAINS is an open‐source, automated tool designed to extract detailed grain size and shape descriptors from smartphone images. It supports geotechnical applications by providing rapid, reproducible analyses and generating comprehensive spreadsheets with measurement data.
+
+## Google Colab Notebooks
+
+### 1. Grain Segmentation & Shape Descriptor Calculation
+This notebook automates the segmentation of grain images and computes key shape descriptors, such as:
+- Shape metrics (Roundness, aspect ratio, convexity, and sphericity)
+
+It outputs an Excel file summarizing the results, along with visual representations of each analysis.  
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/camedinak24/fastGRAINS25/blob/main/FastGRAINS.ipynb)
+
+### 2. Camera Calibration & Distortion Correction
+This notebook guides you through calibrating your smartphone camera by using a printed or displayed chessboard pattern. It detects chessboard corners, computes calibration parameters, and then applies these parameters to correct lens distortion in your photographs. The calibration process ensures that shape measurements are accurate and reliable.  
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ckuncarm/fastGRAINS25/blob/main/Calibration_Unidstortion_Notebook.ipynb)
 
 ## 📋 Overview
 
