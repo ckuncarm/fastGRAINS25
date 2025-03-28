@@ -17,7 +17,7 @@ This notebook guides you through calibrating your smartphone camera by using a p
 
 ## 📋 Overview
 
-This repository contains the implementation of the manuscript titled **"Using a Smartphone Device to Quantify Particle Size and Shape Descriptors"** (November 2024). fastGRAINS provides an open-source, automatic procedure to obtain particle size and shape descriptors through 2D image processing using a smartphone device.
+This repository contains the implementation of the manuscript titled "Using a Smartphone Device to Quantify Particle Size and Shape Descriptors" (March 2025), currently under review at Acta Geotechnica. fastGRAINS provides an open-source, automatic procedure to obtain particle size and shape descriptors through 2D image processing using a smartphone device.
 
 ## ✨ Key Features
 
