@@ -126,13 +126,18 @@ These tools significantly enhance the automation capabilities of our pipeline an
 ## 📝 Citation
 
 If you use this tool in your research, please cite:
-```
-Escribano, D., Kuncar Medina, C., & Montalva Alvarado, G. (2024). Using a Smartphone Device to Quantify Particle Size and Shape Descriptors. [Journal information pending]
-```
-
-## 📜 License
-
-()
+```bibtex
+@article{EscribanoLeiva2025,
+  author = {Escribano Leiva, Daniella and Kuncar Medina, Carlos and Montalva, Gonzalo},
+  title = {Using a smartphone device to quantify particle size and shape descriptors},
+  journal = {Acta Geotechnica},
+  year = {2025},
+  volume = {20},
+  number = {10},
+  pages = {5277--5295},
+  doi = {10.1007/s11440-025-02676-x},
+  url = {https://doi.org/10.1007/s11440-025-02676-x}
+}
 
 ##  Acknowledgments
 
