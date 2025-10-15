@@ -138,6 +138,7 @@ If you use this tool in your research, please cite:
   doi = {10.1007/s11440-025-02676-x},
   url = {https://doi.org/10.1007/s11440-025-02676-x}
 }
+```
 
 ##  Acknowledgments
 
